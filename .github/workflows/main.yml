@@ -1,0 +1,35 @@
+name: Build and Deploy Jekyll Site
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Create docs directory
+        run: mkdir -p docs
+
+      - name: Build Jekyll site
+        uses: actions/jekyll-build-pages@v1
+        with:
+          source: './'  # Adjust this if your Jekyll files are in a different folder
+          destination: './docs/_site'  # This is where the generated site will go
+          future: true  # Allows for future-dated posts
+          verbose: true  # Optional: set to true for more detailed logs
+
+      - name: Deploy to GitHub Pages
+        if: github.ref == 'refs/heads/main'
+        run: |
+          echo "Deploying to GitHub Pages..."
+          # You can add deployment commands here if needed
+          # For example, deploying the contents of docs/_site to gh-pages branch
